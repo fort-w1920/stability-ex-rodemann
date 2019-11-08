@@ -1,0 +1,69 @@
+## Stabil, Brudi!
+
+### First, understand the problem ....
+
+Wir implementieren (partiell!) eine sehr allgemeine Methode für Variablenselektion  für verschiedene Modellklassen. Die Methode wird beschrieben in Meinshausen und Bühlmann's *Stability Selection*^[Meinshausen, N., & Bühlmann, P. (2010). Stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72(4), 417-473.] [(pdf)](http://stat.ethz.ch/~nicolai/stability.pdf). 
+
+a)  Lesen und verstehen Sie Sections 1, 2 und 5 des oben verlinkten Papers. Ignorieren Sie dabei die Abschnitte über "Gaussian graphical modelling" und "randomized Lasso". 
+
+b) Überprüpfen Sie ihr Verständnis. Betrachten Sie dazu den linken und den mittleren Plot in Figure 1 auf Seite 5 oben. 
+Was genau repräsentiert die horizontale Achse ($\lambda$)? Was repräsentieren jeweils die vertikalen Achsen ($\beta$ bzw. $\Pi$)?  Warum fangen in beiden Plots alle Pfade in (1.0, 0.0) an?
+
+b) Fassen Sie die Grundidee des Stability Selection Algorithmus in eigenen Worten zusammen. Was sind grob die einzelnen Schritte des Algorithmus um die "stability paths" zu berechnen?  
+Erstellen Sie eine erste eigene Skizze einer Implementation des Algorithmus in Pseudo-Code, in dem in der Vorlesung besprochenen Top-Down-Stil. 
+
+*Hinweis*: Falls nötig finden Sie eine einigermaßen übersichtliche Beschreibung der Grundidee von Lasso-Regression anhand derer in dem Paper die *stability selection*-Methode veranschaulicht wird z.B. in Kapitel 3.4.2 aus T. Hastie und R. Tibshirani's *Elements of Statistical Learning* [(pdf)](http://statweb.stanford.edu/~tibs/ElemStatLearn/).
+
+--------------------------
+
+### ... then, write the code:
+
+Benutzen Sie als Ausgangsbasis den Code in `get-stability-paths.R`. 
+```{r, load, echo=FALSE}
+source("get-stability-paths.R")
+```
+Die `refit`-Funktion können Sie hier zunächst mal als "black box" betrachten.
+Beachten Sie bitte dass Sie eventuell noch die Pakete `{leaps}` und `{ElemStatLearn}` installieren müssen.
+
+## Stabil, Brudi: Resampling
+
+Schreiben Sie die fehlenden Funktionen 
+```r
+sample_without_replacement <- function(nrows, strata = NULL, fraction = 0.5) {
+  # ??
+}
+get_selected <- function(new_model) {
+  # ??
+}
+make_paths <- function(selected) {
+  # ??
+}
+```
+`get_selected` sollte für ein gegebenes Modell eine Matrix mit (max. Subsetgröße+1)$\times$(Anz. Kovariablen)
+zurückgeben, `make_paths` sollte für eine Liste solcher Matrizen eine Matrix die die *stability paths* enthält zurückgeben. Die erste Zeile der Matrizen sollte (Selektionshäufigkeiten für) 
+ein Modell ohne Kovariablen repräsentieren. 
+
+*Hinweis / Spoiler:* Die für `get_selected` benötigten Informationen über ein von `regsubsets` erzeugtes Modellobjekt können Sie mit `summary` in die Konsole drucken lassen.  
+Benutzen sie `str` in Kombination mit `summary` um zu verstehen wo & wie diese Informationen abgespeichert sind um diese dann per Code auslesen zu können.
+
+
+Überprüfen Sie Ihren Code mit folgendem Test:
+
+```{r, code = readLines("get-stability-paths.R"), echo=FALSE}
+```
+```{r, code = readLines("stability-paths-def.R"), echo=FALSE}
+```
+```{r, code = readLines("test-get-stability-paths.R")}
+```
+
+### Visualisierung
+
+Schreiben Sie eine Funktion `plot_stability_paths`, die in etwa so etwas wie 
+die untenstehende Grafik erzeugt. 
+
+```{r, code = readLines("stability-plot-def.R"), echo=FALSE}
+```
+```{r, plot_paths_ex, fig.width=5, fig.heigth=3}
+plot_stability_paths(stability_paths)
+```
+
