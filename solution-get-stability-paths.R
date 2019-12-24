@@ -61,18 +61,20 @@ sample_with_replacement <- function(nrows, strata = NULL) {
 
 sample_without_replacement <- function(nrows, strata = NULL, fraction = 0.5) {
   if (is.null(strata)) {
-    return(sample(nrows*fraction, replace = FALSE)) 
+    return(sample(nrows, nrows*fraction, replace = FALSE)) 
   }
   checkmate::assert_atomic_vector(strata, len = nrows)
   rows <- tapply(
-    X = seq_len(nrows*fraction), INDEX = strata, FUN = sample, size = nrows*fraction, replace = FALSE
+    X = seq_len(nrows), INDEX = strata, FUN = sample, size = nrows*fraction, replace = FALSE
   )
   as.vector(rows)
 }
 
+
 get_selected <- function(new_model) {
   matrix_selected <- summary(new_model)$which[,-1]
-
+  matrix_selected <- rbind(rep(FALSE, ncol(matrix_selected)), matrix_selected)
+  
 }
 
 make_paths <- function(selected) {
